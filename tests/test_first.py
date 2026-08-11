@@ -121,6 +121,7 @@ def test_checkmate(capsys):
     board = create_checkmate_board()
 
     result = milestone.game_state(board)
+    milestone.description(board)
     output = capsys.readouterr().out
 
     assert board.is_checkmate()
@@ -135,6 +136,7 @@ def test_stalemate(capsys):
     )
 
     result = milestone.game_state(board)
+    milestone.description(board)
     output = capsys.readouterr().out
 
     assert board.is_stalemate()
@@ -149,6 +151,7 @@ def test_insufficient_material(capsys):
     )
 
     result = milestone.game_state(board)
+    milestone.description(board)
     output = capsys.readouterr().out
 
     assert board.is_insufficient_material()
@@ -163,6 +166,7 @@ def test_fifty_move_rule(capsys):
     )
 
     result = milestone.game_state(board)
+    milestone.description(board)
     output = capsys.readouterr().out
 
     assert board.can_claim_fifty_moves()
@@ -185,6 +189,7 @@ def test_threefold_repetition(capsys):
         board.push_uci(move)
 
     result = milestone.game_state(board)
+    milestone.description(board)
     output = capsys.readouterr().out
 
     assert board.can_claim_threefold_repetition()

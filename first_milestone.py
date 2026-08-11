@@ -59,15 +59,14 @@ def random_choice(board):
 
 # ISSUE 5
 
-def game_state(board):
+def description(board):
+
     outcome = board.outcome(claim_draw = True)
 
     if outcome is None:
-        if board.is_check():
-            print(f"체크!")
-        ## 게임이 진행중이니 True
-        return True
+        return
 
+    print(board)
     termination = outcome.termination
     if termination == chess.Termination.CHECKMATE:
         print("체크메이트!")
@@ -90,8 +89,19 @@ def game_state(board):
     else:
         print("DRAW!!!")
 
-    ##게임이 끝났으니 False 
-    return False
+
+def game_state(board):
+    outcome = board.outcome(claim_draw = True)
+
+    if outcome is None:
+        if board.is_check():
+            print(f"체크!")
+        return True
+    else:
+        return False
+    
+
+
 
 # ISSUE 6
 def play_chess(board):
@@ -109,10 +119,10 @@ def play_chess(board):
         else:
             move = random_choice(board)
             board.push(move)
-    print(board)
+    description(board)
 
 if __name__ == "__main__":
     board = chess.Board()
     play_chess(board)
 
-
+    

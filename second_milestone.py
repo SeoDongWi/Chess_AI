@@ -27,9 +27,19 @@ def calculate_scores(board):
     return [white_score, black_score]
 
 def board_scores(board):
+    outcome = board.outcome(claim_draw = True)
+    if outcome is not None:
+        result = outcome.result()
+        if result == "1-0":
+            return 999
+        elif result == "0-1":
+            return -999
+        else:
+            return 0
+
     scores = calculate_scores(board)
     board_score = scores[0] -  scores[1]
     return board_score
-        
+
 if __name__ == "__main__":
     main()
