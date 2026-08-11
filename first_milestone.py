@@ -1,8 +1,6 @@
 import chess
 import random
 
-board = chess.Board()
-
 #체스판 생성 ISSUE 2
 # print(board)
 
@@ -104,7 +102,7 @@ def play_chess(board):
 
         if who_is_turn(board):
             move = user_input(board)
-            if move == None:
+            if move is None:
                 print("게임이 종료되었습니다.")
                 break
             board.push(move)
@@ -112,5 +110,7 @@ def play_chess(board):
             move = random_choice(board)
             board.push(move)
     print(board)
-play_chess(board)
 
+if __name__ == "__main__":
+    board = chess.Board()
+    play_chess(board)
