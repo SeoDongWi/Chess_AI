@@ -191,3 +191,4 @@ def test_threefold_repetition(capsys):
     assert result is False
     assert "3회 반복" in output
     assert "DRAW" in output
+    
