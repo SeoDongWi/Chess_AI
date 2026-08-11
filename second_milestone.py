@@ -41,5 +41,26 @@ def board_scores(board):
     board_score = scores[0] -  scores[1]
     return board_score
 
+def minimax(board, depth):
+
+    outcome = board.outcome(claim_draw=True)
+
+    if depth <= 0 or outcome is not None:
+        return board_scores(board)
+
+    legal_score = []
+
+    for move in board.legal_moves:
+        board.push(move)
+        legal_score.append(minimax(board,depth-1))
+        board.pop()
+
+    if board.turn == chess.WHITE:
+        return max(legal_score)
+    else:
+        return min(legal_score)
+
+
+
 if __name__ == "__main__":
     main()
