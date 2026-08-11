@@ -25,6 +25,11 @@ def calculate_scores(board):
         white_score += score * white_count
         black_score += score * black_count
     return [white_score, black_score]
+
+def board_scores(board):
+    scores = calculate_scores(board)
+    board_score = scores[0] -  scores[1]
+    return board_score
         
 if __name__ == "__main__":
     main()
