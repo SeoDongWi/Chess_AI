@@ -1,7 +1,6 @@
 import chess
+import time
 from first_milestone import game_state, who_is_turn, user_input
-
-board = chess.Board()
 
 piece_scores = {
     chess.PAWN : 1,
@@ -12,9 +11,21 @@ piece_scores = {
     chess.KING : 99
 }
 
+
+
 def main():
     print("Minimax AI 모듈을  실행 합니다.")
-    print(board)
+    board = chess.Board()
+    for depth in [1,2,3]:
+        start_time = time.perf_counter()
+        move = choose_best_move(board, depth)
+        taken_time = time.perf_counter() - start_time
+        print(
+            f"깊이 : {depth}",
+            f"선택한 수 : {move}",
+            f"탐색시간 : {taken_time:.5f}초",
+        )
+        print()
 
 def calculate_scores(board):
     white_score = 0
@@ -60,14 +71,14 @@ def minimax(board, depth):
     else:
         return min(legal_score)
 
-def choose_best_move(board):
+def choose_best_move(board,depth):
 
     if board.turn == chess.WHITE:
         chosen_move = None
         score = float("-inf")
         for move in board.legal_moves:
             board.push(move)
-            moved_score = minimax(board, 1)
+            moved_score = minimax(board, depth-1)
             if score < moved_score:
                 score = moved_score
                 chosen_move = move
@@ -79,14 +90,13 @@ def choose_best_move(board):
         score = float("inf")
         for move in board.legal_moves:
             board.push(move)
-            moved_score = minimax(board, 1)
+            moved_score = minimax(board, depth-1)
             if score > moved_score:
                 score = moved_score
                 chosen_move = move
             board.pop()
         return chosen_move
         
-
 
 
 
