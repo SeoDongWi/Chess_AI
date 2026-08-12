@@ -1,6 +1,6 @@
 import chess
 import time
-from first_milestone import game_state, who_is_turn, user_input
+from first_milestone import game_state, user_input, description
 
 piece_scores = {
     chess.PAWN : 1,
@@ -13,7 +13,7 @@ piece_scores = {
 
 
 
-def main():
+def time_check():
     print("Minimax AI 모듈을  실행 합니다.")
     board = chess.Board()
     for depth in [1,2,3,4]:
@@ -116,6 +116,10 @@ def choose_best_move(board,depth):
                 score = moved_score
                 chosen_move = move
             board.pop()
+        print(
+            f"선택한 수 : {chosen_move}",
+            f"평가 점수 : {score}",
+        )
         return chosen_move
 
     else:
@@ -123,15 +127,39 @@ def choose_best_move(board,depth):
         score = float("inf")
         for move in board.legal_moves:
             board.push(move)
-            moved_score = minimax(board, depth-1)
+            moved_score = minimax_alpha_beta_pruning(board, depth-1, float("-inf"), float("inf"))
             if score > moved_score:
                 score = moved_score
                 chosen_move = move
             board.pop()
+        print(
+            f"선택한 수 : {chosen_move}",
+            f"평가 점수 : {score}",
+        )
         return chosen_move
         
+def play_chess_with_minimax(board):
+
+    print("MINIMAX_AI와 CHESS 플레이 해보자!!")
+    print("종료를 원하신다면 'quit'를 입력해주세요. ")
+    while game_state(board):
+        if board.turn == chess.WHITE:
+            print(board)
+            print("당신(백)의 차례입니다!")
+            move = user_input(board)
+            if move is None:
+                print("게임이 종료되었습니다!")
+                break
+            board.push(move)
+        else:
+            move = choose_best_move(board, 3)
+            board.push(move)
+    description(board)
+    
+    
 
 
 
 if __name__ == "__main__":
-    main()
+    board = chess.Board()
+    play_chess_with_minimax(board)
