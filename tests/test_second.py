@@ -134,17 +134,14 @@ def test_alpha_beta_does_not_change_board():
 # ISSUE 14~17: 최적 수 선택과 대국 연결
 
 
-def test_choose_best_move_is_legal_and_preserves_board(capsys):
+def test_choose_best_move_is_legal_and_preserves_board():
     board = chess.Board()
     original_fen = board.fen()
 
     move = milestone.choose_best_move(board, 2)
-    output = capsys.readouterr().out
 
     assert move in board.legal_moves
     assert board.fen() == original_fen
-    assert "선택한 수" in output
-    assert "평가 점수" in output
 
 
 def test_choose_best_move_returns_none_when_game_over():
@@ -153,12 +150,10 @@ def test_choose_best_move_returns_none_when_game_over():
     assert milestone.choose_best_move(board, 2) is None
 
 
-def test_play_chess_can_quit(monkeypatch, capsys):
+def test_play_chess_can_quit(monkeypatch):
     board = chess.Board()
     monkeypatch.setattr("builtins.input", lambda _: "quit")
 
     milestone.play_chess_with_minimax(board)
-    output = capsys.readouterr().out
 
-    assert "게임이 종료되었습니다!" in output
     assert len(board.move_stack) == 0

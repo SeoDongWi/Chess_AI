@@ -46,10 +46,10 @@ def user_input(board):
 # ISSUE 4
 def random_choice(board):
     if board.is_game_over():
-        print("경기가 종료된 상태입니다.")
+        # print("경기가 종료된 상태입니다.")
         return None
     move = random.choice(list(board.legal_moves))
-    print(f"랜덤 선택된 UCI는 :{move}")
+    # print(f"랜덤 선택된 UCI는 :{move}")
     return move
 
 # move = random_choice(board)

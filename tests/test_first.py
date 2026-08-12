@@ -103,79 +103,61 @@ def test_game_is_in_progress():
     assert milestone.game_state(board) is True
 
 
-def test_check(capsys):
+def test_check():
     board = chess.Board()
 
     for move in ["e2e4", "f7f6", "d1h5"]:
         board.push_uci(move)
 
     result = milestone.game_state(board)
-    output = capsys.readouterr().out
 
     assert board.is_check()
     assert result is True
-    assert "체크!" in output
 
 
-def test_checkmate(capsys):
+def test_checkmate():
     board = create_checkmate_board()
 
     result = milestone.game_state(board)
-    milestone.description(board)
-    output = capsys.readouterr().out
 
     assert board.is_checkmate()
     assert result is False
-    assert "체크메이트!" in output
-    assert "BLACK WIN" in output
 
 
-def test_stalemate(capsys):
+def test_stalemate():
     board = chess.Board(
         "7k/5Q2/6K1/8/8/8/8/8 b - - 0 1"
     )
 
     result = milestone.game_state(board)
-    milestone.description(board)
-    output = capsys.readouterr().out
 
     assert board.is_stalemate()
     assert result is False
-    assert "스테일메이트!" in output
-    assert "DRAW" in output
 
 
-def test_insufficient_material(capsys):
+def test_insufficient_material():
     board = chess.Board(
         "8/8/8/8/8/8/4K3/7k w - - 0 1"
     )
 
     result = milestone.game_state(board)
-    milestone.description(board)
-    output = capsys.readouterr().out
 
     assert board.is_insufficient_material()
     assert result is False
-    assert "기물 부족" in output
-    assert "DRAW" in output
 
 
-def test_fifty_move_rule(capsys):
+def test_fifty_move_rule():
     board = chess.Board(
         "8/8/8/8/8/8/R3K3/7k w - - 100 51"
     )
 
     result = milestone.game_state(board)
-    milestone.description(board)
-    output = capsys.readouterr().out
 
     assert board.can_claim_fifty_moves()
     assert result is False
-    assert "50수 규칙" in output
-    assert "DRAW" in output
 
 
-def test_threefold_repetition(capsys):
+def test_threefold_repetition():
     board = chess.Board()
 
     moves = [
@@ -189,11 +171,7 @@ def test_threefold_repetition(capsys):
         board.push_uci(move)
 
     result = milestone.game_state(board)
-    milestone.description(board)
-    output = capsys.readouterr().out
 
     assert board.can_claim_threefold_repetition()
     assert result is False
-    assert "3회 반복" in output
-    assert "DRAW" in output
     

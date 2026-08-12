@@ -116,10 +116,10 @@ def choose_best_move(board,depth):
                 score = moved_score
                 chosen_move = move
             board.pop()
-        print(
-            f"선택한 수 : {chosen_move}",
-            f"평가 점수 : {score}",
-        )
+        # print(
+        #     f"선택한 수 : {chosen_move}",
+        #     f"평가 점수 : {score}",
+        # )
         return chosen_move
 
     else:
@@ -132,10 +132,10 @@ def choose_best_move(board,depth):
                 score = moved_score
                 chosen_move = move
             board.pop()
-        print(
-            f"선택한 수 : {chosen_move}",
-            f"평가 점수 : {score}",
-        )
+        # print(
+        #     f"선택한 수 : {chosen_move}",
+        #     f"평가 점수 : {score}",
+        # )
         return chosen_move
         
 def play_chess_with_minimax(board):
