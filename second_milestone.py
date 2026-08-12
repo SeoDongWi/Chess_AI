@@ -60,6 +60,34 @@ def minimax(board, depth):
     else:
         return min(legal_score)
 
+def choose_best_move(board):
+
+    if board.turn == chess.WHITE:
+        chosen_move = None
+        score = float("-inf")
+        for move in board.legal_moves:
+            board.push(move)
+            moved_score = minimax(board, 1)
+            if score < moved_score:
+                score = moved_score
+                chosen_move = move
+            board.pop()
+        return chosen_move
+
+    else:
+        chosen_move = None
+        score = float("inf")
+        for move in board.legal_moves:
+            board.push(move)
+            moved_score = minimax(board, 1)
+            if score > moved_score:
+                score = moved_score
+                chosen_move = move
+            board.pop()
+        return chosen_move
+        
+
+
 
 
 if __name__ == "__main__":
