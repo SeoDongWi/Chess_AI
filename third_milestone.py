@@ -5,10 +5,10 @@ from first_milestone import random_choice
 from second_milestone import choose_best_move, minimax_alpha_beta_pruning, board_scores, calculate_scores
 
 def random_agent(board, depth):
-    return random_choice(board)
+    return random_choice(board, False)
 
 def minimax_agent(board, depth):
-    return choose_best_move(board, depth)
+    return choose_best_move(board, depth, False)
 
 random_ai = {
     "name" : "random_v1",

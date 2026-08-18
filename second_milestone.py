@@ -104,7 +104,7 @@ def minimax_alpha_beta_pruning(board, depth, alpha, beta): #alpha is qualified_m
         return best_score
 
 
-def choose_best_move(board,depth):
+def choose_best_move(board,depth, verbose=True):
 
     if board.turn == chess.WHITE:
         chosen_move = None
@@ -116,10 +116,11 @@ def choose_best_move(board,depth):
                 score = moved_score
                 chosen_move = move
             board.pop()
-        # print(
-        #     f"선택한 수 : {chosen_move}",
-        #     f"평가 점수 : {score}",
-        # )
+        if verbose:
+            print(
+                f"선택한 수 : {chosen_move}",
+                f"평가 점수 : {score}",
+            )
         return chosen_move
 
     else:
@@ -132,10 +133,11 @@ def choose_best_move(board,depth):
                 score = moved_score
                 chosen_move = move
             board.pop()
-        # print(
-        #     f"선택한 수 : {chosen_move}",
-        #     f"평가 점수 : {score}",
-        # )
+        if verbose:
+            print(
+                f"선택한 수 : {chosen_move}",
+                f"평가 점수 : {score}",
+            )
         return chosen_move
         
 def play_chess_with_minimax(board):

@@ -5,12 +5,14 @@ import random
 # print(board)
 
 # 차례가 누구인지 판별
-def who_is_turn(board):
+def who_is_turn(board, verbose=True):
     if board.turn == chess.WHITE:
-        print("백 차례")
+        if verbose:
+            print("백 차례")
         return True
     else:
-        print("흑 차례")
+        if verbose:
+            print("흑 차례")
         return False
 
 # # fen 생성 (chess의 현재상태를 나타냄)
@@ -44,12 +46,14 @@ def user_input(board):
 # print(board)
 
 # ISSUE 4
-def random_choice(board):
+def random_choice(board, verbose=True):
     if board.is_game_over():
-        # print("경기가 종료된 상태입니다.")
+        if verbose:
+            print("경기가 종료된 상태입니다.")
         return None
     move = random.choice(list(board.legal_moves))
-    # print(f"랜덤 선택된 UCI는 :{move}")
+    if verbose:
+        print(f"랜덤 선택된 UCI는 :{move}")
     return move
 
 # move = random_choice(board)
@@ -66,8 +70,12 @@ def description(board):
     if outcome is None:
         return
 
-    print(board)
+
+
     termination = outcome.termination
+    result = outcome.result()
+
+    print(board) 
     if termination == chess.Termination.CHECKMATE:
         print("체크메이트!")
     elif termination == chess.Termination.STALEMATE:
@@ -80,8 +88,6 @@ def description(board):
         print("3회 반복으로 무승부!")
     else:
         print(f"기타 종료 원인: {termination.name}!")
-
-    result = outcome.result()
     if result == "1-0":
         print("WHITE WIN!!!")
     elif result == "0-1":
@@ -90,11 +96,12 @@ def description(board):
         print("DRAW!!!")
 
 
-def game_state(board):
+
+def game_state(board, verbose=True):
     outcome = board.outcome(claim_draw = True)
 
     if outcome is None:
-        if board.is_check():
+        if board.is_check() and verbose:
             print(f"체크!")
         return True
     else:
@@ -104,25 +111,30 @@ def game_state(board):
 
 
 # ISSUE 6
-def play_chess(board):
-    print("체스 게임 스타트!")
-    print("종료를 원하신다면 'quit'를 입력해주세요. ")
-    while game_state(board):
-        print(board)
+def play_chess(board, verbose=True):
+    if verbose:
+        print("체스 게임 스타트!")
+        print("종료를 원하신다면 'quit'를 입력해주세요. ")
+    while game_state(board, verbose):
 
-        if who_is_turn(board):
+        if verbose:
+            print(board)
+
+        if who_is_turn(board, verbose):
             move = user_input(board)
             if move is None:
-                print("게임이 종료되었습니다.")
+                if verbose:
+                    print("게임이 종료되었습니다.")
                 break
             board.push(move)
         else:
-            move = random_choice(board)
+            move = random_choice(board, verbose)
             board.push(move)
-    description(board)
+    if verbose:
+        description(board)
 
 if __name__ == "__main__":
     board = chess.Board()
-    play_chess(board)
+    play_chess(board, True)
 
     
