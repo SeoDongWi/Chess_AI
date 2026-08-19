@@ -2,7 +2,7 @@ import chess
 import random
 import csv
 from first_milestone import random_choice
-from second_milestone import choose_best_move, minimax_alpha_beta_pruning, board_scores, calculate_scores
+from second_milestone import choose_best_move
 
 def random_agent(board, depth):
     return random_choice(board, False)
@@ -27,3 +27,16 @@ minimax_ai = {
 
 # white_name = random_ai["name"]
 # black_name = random_ai["name"]
+
+game_result = {
+    "white" : None, #minimax_ai
+    "black" : None, #random_ai
+    "result" : None, #1-0
+    "termination" : None, #outcome = board.outcome(claim_draw = True).termination
+    "moves" : None, #" ".join(move.uci() for move in board.move_stack)
+    "moves_count" : None, #len(board.move_stack)
+    "game_time" : None, # time.perf_counter() - start_time
+    "white_search_time" : 0.00, #white_search_time + time.perf_counter() - start_time
+    "black_search_time" : 0.00, #black_search_time + time.perf_counter() - start_time
+    
+}
