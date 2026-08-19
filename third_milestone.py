@@ -39,9 +39,14 @@ def play_chess_without_user(board, verbose=False):
     "termination" : None, #outcome = board.outcome(claim_draw = True).termination.name
     "moves" : None, #" ".join(move.uci() for move in board.move_stack)
     "moves_count" : None, #len(board.move_stack)
+    "white_moves_count" : None,
+    "black_moves_count" : None,
     "game_time" : None, # time.perf_counter() - start_time
     "white_search_time" : 0.00, #white_search_time + time.perf_counter() - start_time
+    "white_average_search_time" : None,
     "black_search_time" : 0.00, #black_search_time + time.perf_counter() - start_time
+    "black_average_search_time" : None,
+
     }
 
     game_result["white"] = random_ai["name"]
@@ -63,15 +68,34 @@ def play_chess_without_user(board, verbose=False):
             board.push(move)
 
     outcome = board.outcome(claim_draw = True)
-    
+    length = len(board.move_stack)
+
     game_result["result"] = outcome.result()
     game_result["termination"] = outcome.termination.name
     game_result["moves"] = " ".join(move.uci() for move in board.move_stack)
-    game_result["moves_count"] = len(board.move_stack)
+    game_result["moves_count"] = length
+    game_result["white_moves_count"] = (length + 1) // 2
+    game_result["black_moves_count"] = length // 2
     game_result["game_time"] = time.perf_counter() - game_start_time
+
+    if game_result["white_moves_count"] > 0:
+        game_result["white_average_search_time"] = round(
+        game_result["white_search_time"] / game_result["white_moves_count"], 6
+        )
+    else:
+        game_result["white_average_search_time"] = 0.000000
+    
     game_result["white_search_time"] = round(game_result["white_search_time"], 2)
+
+    if game_result["black_moves_count"] > 0:
+        game_result["black_average_search_time"] = round(
+            game_result["black_search_time"] / game_result["black_moves_count"], 6
+        )
+    else:
+        game_result["black_average_search_time"] = 0.000000
+
     game_result["black_search_time"] = round(game_result["black_search_time"], 2)
-    print(game_result)
+    
     return game_result
 
 
