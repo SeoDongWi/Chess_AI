@@ -1,6 +1,7 @@
 import chess
 import csv
 import time
+import pandas as pd
 from pathlib import Path
 from first_milestone import random_choice, game_state
 from second_milestone import choose_best_move
@@ -102,34 +103,20 @@ def make_csv_file(game_results):
     base_dir = Path(__file__).resolve().parent
     data_dir = base_dir / "data" / "results"
     csv_path = data_dir / "game_results.csv"
-    data_dir.mkdir(exist_ok=True)
+    data_dir.mkdir(parents=True,exist_ok=True)
 
-    fieldnames = [
-        "white",
-        "black",
-        "result",
-        "termination",
-        "moves",
-        "moves_count",
-        "white_moves_count",
-        "black_moves_count",
-        "game_time",
-        "white_average_search_time",
-        "white_search_time",
-        "black_average_search_time",
-        "black_search_time",
+    dataframe = pd.DataFrame(game_results)
 
-    ]
-
-    with open(
+    dataframe.to_csv(
         csv_path,
-        "w",
-        newline="",
+        index=False,
         encoding="utf-8-sig",
-    ) as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(game_results)
+        mode="w",
+    )
+
+    loaded_dataframe = pd.read_csv(csv_path)
+
+    print(loaded_dataframe.head())
 
 
 if __name__ == "__main__":
