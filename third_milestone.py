@@ -1,7 +1,7 @@
 import chess
-import random
 import csv
 import time
+from pathlib import Path
 from first_milestone import random_choice, game_state
 from second_milestone import choose_best_move
 
@@ -42,10 +42,11 @@ def play_chess_without_user(white_ai, black_ai, board, verbose=False):
     "white_moves_count" : None,
     "black_moves_count" : None,
     "game_time" : None, # time.perf_counter() - start_time
-    "white_search_time" : 0.00, #white_search_time + time.perf_counter() - start_time
     "white_average_search_time" : None,
-    "black_search_time" : 0.00, #black_search_time + time.perf_counter() - start_time
+    "white_search_time" : 0.00, #white_search_time + time.perf_counter() - start_time
     "black_average_search_time" : None,
+    "black_search_time" : 0.00, #black_search_time + time.perf_counter() - start_time
+
 
     }
 
@@ -80,8 +81,7 @@ def play_chess_without_user(white_ai, black_ai, board, verbose=False):
 
     if game_result["white_moves_count"] > 0:
         game_result["white_average_search_time"] = round(
-        game_result["white_search_time"] / game_result["white_moves_count"], 6
-        )
+        game_result["white_search_time"] / game_result["white_moves_count"], 6)
     else:
         game_result["white_average_search_time"] = 0.000000
     
@@ -89,8 +89,7 @@ def play_chess_without_user(white_ai, black_ai, board, verbose=False):
 
     if game_result["black_moves_count"] > 0:
         game_result["black_average_search_time"] = round(
-            game_result["black_search_time"] / game_result["black_moves_count"], 6
-        )
+            game_result["black_search_time"] / game_result["black_moves_count"], 6)
     else:
         game_result["black_average_search_time"] = 0.000000
 
@@ -98,6 +97,39 @@ def play_chess_without_user(white_ai, black_ai, board, verbose=False):
     
     return game_result
 
+def make_csv_file(game_results):
+
+    base_dir = Path(__file__).resolve().parent
+    data_dir = base_dir / "data" / "results"
+    csv_path = data_dir / "game_results.csv"
+    data_dir.mkdir(exist_ok=True)
+
+    fieldnames = [
+        "white",
+        "black",
+        "result",
+        "termination",
+        "moves",
+        "moves_count",
+        "white_moves_count",
+        "black_moves_count",
+        "game_time",
+        "white_average_search_time",
+        "white_search_time",
+        "black_average_search_time",
+        "black_search_time",
+
+    ]
+
+    with open(
+        csv_path,
+        "w",
+        newline="",
+        encoding="utf-8-sig",
+    ) as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(game_results)
 
 
 if __name__ == "__main__":
@@ -109,4 +141,4 @@ if __name__ == "__main__":
             game_results.append(play_chess_without_user(random_ai, minimax_ai, board, False))
         else:
             game_results.append(play_chess_without_user(minimax_ai, random_ai, board, False))
-    print(game_results)
+    make_csv_file(game_results)
