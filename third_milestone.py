@@ -1,7 +1,8 @@
 import chess
 import random
 import csv
-from first_milestone import random_choice
+import time
+from first_milestone import random_choice, game_state
 from second_milestone import choose_best_move
 
 def random_agent(board, depth):
@@ -28,15 +29,54 @@ minimax_ai = {
 # white_name = random_ai["name"]
 # black_name = random_ai["name"]
 
-game_result = {
+
+def play_chess_without_user(board, verbose=False):
+
+    game_result = {
     "white" : None, #minimax_ai
     "black" : None, #random_ai
     "result" : None, #1-0
-    "termination" : None, #outcome = board.outcome(claim_draw = True).termination
+    "termination" : None, #outcome = board.outcome(claim_draw = True).termination.name
     "moves" : None, #" ".join(move.uci() for move in board.move_stack)
     "moves_count" : None, #len(board.move_stack)
     "game_time" : None, # time.perf_counter() - start_time
     "white_search_time" : 0.00, #white_search_time + time.perf_counter() - start_time
     "black_search_time" : 0.00, #black_search_time + time.perf_counter() - start_time
+    }
+
+    game_result["white"] = random_ai["name"]
+    game_result["black"] = minimax_ai["name"]
+    game_start_time = time.perf_counter()
+
+    while game_state(board, verbose):
+        
+        if board.turn == chess.WHITE:
+            white_time = time.perf_counter()
+            move = random_ai["choose_move"](board, random_ai["depth"])
+            game_result["white_search_time"] += time.perf_counter() - white_time
+            board.push(move)
+
+        else:
+            black_time = time.perf_counter()
+            move =  minimax_ai["choose_move"](board, minimax_ai["depth"])
+            game_result["black_search_time"] += time.perf_counter()- black_time
+            board.push(move)
+
+    outcome = board.outcome(claim_draw = True)
     
-}
+    game_result["result"] = outcome.result()
+    game_result["termination"] = outcome.termination.name
+    game_result["moves"] = " ".join(move.uci() for move in board.move_stack)
+    game_result["moves_count"] = len(board.move_stack)
+    game_result["game_time"] = time.perf_counter() - game_start_time
+    game_result["white_search_time"] = round(game_result["white_search_time"], 2)
+    game_result["black_search_time"] = round(game_result["black_search_time"], 2)
+    print(game_result)
+    return game_result
+
+
+
+if __name__ == "__main__":
+    game_results = []
+    board = chess.Board()
+    game_results.append(play_chess_without_user(board, False))
