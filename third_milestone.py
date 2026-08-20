@@ -1,6 +1,7 @@
 import chess
 import time
 import pandas as pd
+import matplotlib.pyplot as plt
 from pathlib import Path
 from first_milestone import random_choice, game_state
 from second_milestone import choose_best_move
@@ -46,8 +47,6 @@ def play_chess_without_user(white_ai, black_ai, board, verbose=False):
     "white_search_time" : 0.00, #white_search_time + time.perf_counter() - start_time
     "black_average_search_time" : None,
     "black_search_time" : 0.00, #black_search_time + time.perf_counter() - start_time
-
-
     }
 
     game_result["white"] = white_ai["name"]
@@ -100,7 +99,7 @@ def play_chess_without_user(white_ai, black_ai, board, verbose=False):
 def make_csv_file(game_results):
 
     base_dir = Path(__file__).resolve().parent
-    data_dir = base_dir / "data" / "results"
+    data_dir = base_dir / "data"
     csv_path = data_dir / "game_results.csv"
     data_dir.mkdir(parents=True,exist_ok=True)
 
@@ -120,7 +119,7 @@ def make_csv_file(game_results):
 def make_ai_data_csv(data):
 
     base_dir = Path(__file__).resolve().parent
-    data_dir = base_dir / "data" / "results"
+    data_dir = base_dir / "data"
     csv_path = data_dir / "ai_results.csv"
     data_dir.mkdir(parents=True,exist_ok=True)
 
@@ -235,6 +234,98 @@ def calculate_performance_statistics(data):
     ]]
 
     return ai_performance
+
+def plot_game_results(data):
+
+    base_dir = Path(__file__).resolve().parent
+    data_dir = base_dir / "data"
+    png_path = data_dir / "ai_game_results.png"
+    data_dir.mkdir(parents=True,exist_ok=True)
+
+    fig, ax = plt.subplots()
+    data.set_index("ai")[["win_rate", "draw_rate", "loss_rate"]].plot(
+        kind="bar",
+        ax=ax
+    )
+    for bars in ax.containers:
+        ax.bar_label(bars)
+
+    ax.set_title("AI Game Results")
+    ax.set_xlabel("AI")
+    ax.set_ylabel("Rates(%)")
+    ax.set_ylim(0, 105)
+    ax.set_yticks(range(0, 101, 10))
+    ax.tick_params(axis="x", rotation=0)
+    ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1),)
+
+    fig.savefig(
+        png_path,
+        dpi=150,
+        bbox_inches="tight",
+    )
+    plt.close(fig)
+
+def plot_search_times(data):
+
+    base_dir = Path(__file__).resolve().parent
+    data_dir = base_dir / "data"
+    png_path = data_dir / "ai_search_times.png"
+    data_dir.mkdir(parents=True,exist_ok=True)
+
+    fig, ax = plt.subplots()
+    bars = ax.bar(
+        data["ai"],
+        data["average_search_time"],
+    )
+    ax.bar_label(bars)
+    ax.set_title("Ai_Search_Times")
+    ax.set_xlabel("AI")
+    ax.set_ylabel("Search_Times(s)")
+
+    fig.savefig(
+        png_path,
+        dpi=150,
+        bbox_inches="tight",
+    )
+
+    plt.close(fig)
+    
+def plot_game_length_distribution(data):
+
+    base_dir = Path(__file__).resolve().parent
+    data_dir = base_dir / "data"
+    png_path = data_dir / "game_length_distribution.png"
+    data_dir.mkdir(parents=True,exist_ok=True)
+
+    game_lengths = (data["moves_count"]+1) // 2
+    average_length = game_lengths.mean()
+
+    fig, ax = plt.subplots()
+    ax.hist(
+        game_lengths,
+        bins=5,
+        edgecolor="black",
+    )
+    ax.axvline(
+        average_length,
+        color="red",
+        linestyle="--",
+        label=f"Average : {average_length:.2f}"
+    )
+    ax.legend()
+    ax.set_title("Game Length Distribution")
+    ax.set_xlabel("Move Count")
+    ax.set_ylabel("Number of Games")
+
+
+    fig.savefig(
+        png_path,
+        dpi=150,
+        bbox_inches="tight",
+    )
+
+    plt.close(fig)
+
 if __name__ == "__main__":
     game_results = []
     
@@ -247,3 +338,6 @@ if __name__ == "__main__":
     data = make_csv_file(game_results)
     ai_data = calculate_performance_statistics(data)
     make_ai_data_csv(ai_data)
+    plot_game_results(ai_data)
+    plot_search_times(ai_data)
+    plot_game_length_distribution(data)
