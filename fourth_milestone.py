@@ -8,19 +8,25 @@ def one_game():
             return int(value)
         except (TypeError, ValueError):
             return None
-        
+    total_game = 0
+    game_id = 0
     chess_result = ["1-0", "1/2-1/2", "0-1"]
     base_dir = Path(__file__).resolve().parent
     data_dir = base_dir / "data" / "raw"
     pgn_path = data_dir / "lichess_db_broadcast_2025-12.pgn"
     with open(pgn_path, encoding="utf-8") as pgn_file:
-        while True: 
+        while True:
+            
             game = chess.pgn.read_game(pgn_file)
-            if game is None:
+            if game is None or game_id >= 1000:
+                print(f"읽은 전체 경기수 : {total_game}")
+                print(f"마지막 game_id : {game_id}")
                 return
+            
+            total_game += 1 
             white_elo = check_int(game.headers.get("WhiteElo"))
             black_elo = check_int(game.headers.get("BlackElo"))
-            if check_int(white_elo) is None or check_int(black_elo) is None:
+            if white_elo is None or black_elo is None:
                 continue
 
             
@@ -40,13 +46,12 @@ def one_game():
             if variant.lower() != "standard":
                 continue
 
-            break
+            game_id += 1
+            # board = game.board()
+            # for move in game.mainline_moves():
+            #     board.push(move)
 
-    board = game.board()
-    for move in game.mainline_moves():
-        board.push(move)
-    print(board)
-    print(game.headers.get("Result"))
-    print(white_elo, black_elo)
+
+
 if __name__ == "__main__":
     one_game()
